@@ -1,22 +1,14 @@
 # Correct horse battery
 > Beat developers at their own game!
 
-## Project setup
-```
-npm install
-```
+## Tech stack
+This project runs on Docker, VueJS and AMPHP.
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+## Development
+Run `npm install` to install the client-side dependencies. Run `npm run serve` to serve the development assets.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+Run `docker-compose up` and open [localhost:8080](http://localhost:8080).
 
-### Lints and fixes files
-```
-npm run lint
-```
+## Production build
+`npm run build`
+Docker instructions to be determined later.

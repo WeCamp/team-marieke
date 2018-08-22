@@ -14,5 +14,9 @@
         "platform": {
             "php": "7.2.8"
         }
-    }
+    },
+    "repositories": [
+        {"type": "composer", "url": "https://packagist-repo.weca.mp/wecamp/"},
+        {"packagist.org": false}
+    ]
 }
