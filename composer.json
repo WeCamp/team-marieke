@@ -1,0 +1,10 @@
+{
+    "name": "correct-horse-battery/wecamp",
+    "type": "project",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "CorrectHorseBattery\\": "src/"
+        }
+    }
+}
