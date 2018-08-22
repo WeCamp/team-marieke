@@ -6,7 +6,6 @@ use Amp\Http\Server\Response;
 use Amp\Http\Server\Server;
 use Amp\Http\Status;
 use Amp\Socket;
-use Psr\Log\NullLogger;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -16,11 +15,23 @@ Amp\Loop::run(function () {
         Socket\listen("[::]:8080"),
     ];
 
-    $server = new Server($sockets, new CallableRequestHandler(function (Request $request) {
+    $log = new \Monolog\Logger('app', [new \Monolog\Handler\StreamHandler('php://stderr')]);
+
+    $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log) {
+        if ($request->getUri()->getPath() === '/') {
+            return new Response(Status::OK, [
+                'content-type' => 'application/json'
+            ], json_encode([
+                ['username' => 'ingmar'],
+                ['username' => 'jakob'],
+                ['username' => 'gedi'],
+            ]));
+        }
+
         return new Response(Status::OK, [
             "content-type" => "text/plain; charset=utf-8"
         ], "Hello, World!");
-    }), new NullLogger);
+    }), $log);
 
     yield $server->start();
 
