@@ -1,6 +1,6 @@
 version: '3.7'
 services:
-  web:
+  backend:
     build: .
     init: true
     ports:
@@ -8,3 +8,11 @@ services:
     volumes:
     - .:/app
     command: php /app/public/app.php
+  frontend:
+    image: node:10
+    ports:
+    - "8081:8080"
+    volumes:
+    - .:/app
+    working_dir: /app
+    command: npm run serve
