@@ -1,7 +1,9 @@
 {
     "name": "correct-horse-battery/wecamp",
     "type": "project",
-    "require": {},
+    "require": {
+        "amphp/http-server": "^0.8.2"
+    },
     "autoload": {
         "psr-4": {
             "CorrectHorseBattery\\": "src/"
