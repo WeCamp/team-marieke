@@ -5,9 +5,10 @@
 This project runs on Docker, VueJS and AMPHP.
 
 ## Development
-Run `npm install` to install the client-side dependencies. Run `npm run serve` to serve the development assets.
 
-Run `docker-compose up` and open [localhost:8080](http://localhost:8080).
+- Run `composer install` to install backend dependencies.
+- Run `npm install` to install the client-side dependencies.
+- Run `docker-compose up` and open [localhost:8081](http://localhost:8081).
 
 ## Production build
 `npm run build`
