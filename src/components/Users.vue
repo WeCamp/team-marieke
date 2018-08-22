@@ -11,7 +11,10 @@
             <tbody>
                 <tr v-for="user in users"
                     :key="user.username">
-                    <td>{{ user.username }}</td>
+                    <td>
+                        <button type="button" @click="signOn(user.username)">{{ user.username }}</button>
+                        <b v-if="usernameOfSignedOnUser === user.username">signed on</b>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -22,16 +25,26 @@
     import axios from 'axios';
 
     export default {
-    data() {
-        return {
-            users: [],
-        };
-    },
+        data() {
+            return {
+                users: [],
+            };
+        },
 
-    mounted() {
-        axios.get('http://localhost:8080/').then(response => {
-            this.users = response.data;
-        });
-    },
-};
+        mounted() {
+            axios.get('http://localhost:8080/').then(response => {
+                this.users = response.data;
+            });
+        },
+
+        methods: {
+            signOn(username) {
+                this.$emit('update:usernameOfSignedOnUser', username);
+            }
+        },
+
+        props: [
+            'usernameOfSignedOnUser',
+        ],
+    };
 </script>
