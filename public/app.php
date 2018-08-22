@@ -12,8 +12,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 Amp\Loop::run(function () {
     $sockets = [
-        Socket\listen("0.0.0.0:1337"),
-        Socket\listen("[::]:1337"),
+        Socket\listen("0.0.0.0:8080"),
+        Socket\listen("[::]:8080"),
     ];
 
     $server = new Server($sockets, new CallableRequestHandler(function (Request $request) {
