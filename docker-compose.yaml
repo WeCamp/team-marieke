@@ -1,7 +1,8 @@
-version: '3'
+version: '3.7'
 services:
   backend:
     build: .
+    init: true
     ports:
     - "8080:8080"
     volumes:
