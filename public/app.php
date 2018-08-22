@@ -20,7 +20,8 @@ Amp\Loop::run(function () {
     $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log) {
         if ($request->getUri()->getPath() === '/') {
             return new Response(Status::OK, [
-                'content-type' => 'application/json'
+                'content-type' => 'application/json',
+                "Access-Control-Allow-Origin" => '*',
             ], json_encode([
                 ['username' => 'ingmar'],
                 ['username' => 'jakob'],
@@ -29,7 +30,8 @@ Amp\Loop::run(function () {
         }
 
         return new Response(Status::OK, [
-            "content-type" => "text/plain; charset=utf-8"
+            "content-type" => "text/plain; charset=utf-8",
+            "Access-Control-Allow-Origin" => '*',
         ], "Hello, World!");
     }), $log);
 

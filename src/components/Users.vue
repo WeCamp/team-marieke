@@ -19,9 +19,9 @@
 </template>
 
 <script>
-import axios from 'axios';
+    import axios from 'axios';
 
-export default {
+    export default {
     data() {
         return {
             users: [],
@@ -29,7 +29,7 @@ export default {
     },
 
     mounted() {
-        axios.get('localhost:8080/').then(response => {
+        axios.get('http://localhost:8080/').then(response => {
             this.users = response.data;
         });
     },
