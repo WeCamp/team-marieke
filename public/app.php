@@ -19,6 +19,12 @@ Amp\Loop::run(function () {
 
     $router = new \CorrectHorseBattery\Router;
     $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log, $router) {
+        if ($request->getMethod() === 'OPTIONS') {
+            return new Response(Status::OK, [
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Headers' => ['*'],
+            ]);
+        }
         return $router->route($request);
     }), $log);
 
