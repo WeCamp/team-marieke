@@ -14,12 +14,33 @@ class Router
 
     public function __construct()
     {
+        $players = function (): Players {
+            static $instance = null;
+            if ($instance === null) {
+                $instance = new Players();
+            }
+            return $instance;
+        };
+        $authenticationContext = function () use ($players): AuthenticationContext {
+            static $instance = null;
+            if ($instance === null) {
+                $instance = new AuthenticationContext($players());
+            }
+            return $instance;
+        };
+
         $this->routes = [
             '/' => function () {
                 return new \CorrectHorseBattery\Controllers\Login();
             },
-            '/playerstochallenge' => function () {
-                return new \CorrectHorseBattery\Controllers\ChallengeablePlayers(new AuthenticationContext(new Players()));
+            '/playerstochallenge' => function () use ($authenticationContext) {
+                return new \CorrectHorseBattery\Controllers\ChallengeablePlayers($authenticationContext());
+            },
+            '/challengeplayer' => function () use ($authenticationContext, $players) {
+                return new \CorrectHorseBattery\Controllers\ChallengePlayer(
+                    $authenticationContext(),
+                    $players()
+                );
             },
         ];
     }
@@ -30,7 +51,7 @@ class Router
 
         // If a controller for this URL exists, create it and execute it with the request
         if (isset($this->routes[$url])) {
-            return ($this->routes[$url])()($request);
+            return $this->routes[$url]()($request);
         }
 
         return new Response(Status::NOT_FOUND);

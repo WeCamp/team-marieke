@@ -7,7 +7,7 @@ use Amp\Http\Server\Response;
 use Amp\Http\Status;
 use CorrectHorseBattery\Authentication\AuthenticationContext;
 use CorrectHorseBattery\Authentication\NoPlayerSignedOn;
-use CorrectHorseBattery\Authentication\PlayerDoesNotExist;
+use CorrectHorseBattery\Domain\PlayerDoesNotExist;
 use CorrectHorseBattery\Repositories\Players;
 
 class ChallengeablePlayers
@@ -33,7 +33,7 @@ class ChallengeablePlayers
         }
 
         $challengeablePlayers = array_filter($allPlayers, function ($player) use ($currentPlayer) {
-            return $player['username'] !== $currentPlayer['username'];
+            return $player['username'] !== $currentPlayer->username();
         });
 
         return new Response(Status::OK, [
