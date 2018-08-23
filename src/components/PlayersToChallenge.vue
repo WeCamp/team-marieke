@@ -2,16 +2,9 @@
     <div>
         <h1>Players to challenge</h1>
 
-        <div class="alert alert-waiting" v-if="state === 'waiting'">
-            Your challenge is awaiting a response
-        </div>
-
-        <div class="alert alert-accepted" v-if="state === 'accepted'">
-            Your challenge has been accepted by {{ usernameOfChallengedToDuel }}
-        </div>
-
-        <div class="alert alert-rejected" v-if="state === 'rejected'">
-            Your challenge has been rejected
+        <div v-if="state !== 'initial'"
+            class="alert" :class="`alert-${this.state}`">
+            {{ message }}
         </div>
 
         <table v-if="state === 'initial'">
@@ -68,6 +61,18 @@
         props: [
             'usernameOfSignedOnUser',
         ],
+
+        computed: {
+            message() {
+                if (this.state === 'waiting') {
+                    return 'waiting for challenge acceptance';
+                } else if (this.state === 'accepted') {
+                    return 'challenge has been accepted by ' + this.usernameOfChallengedToDuel;
+                } else if (this.state === 'rejected') {
+                    return 'challenge denied!';
+                }
+            },
+        },
     };
 </script>
 
