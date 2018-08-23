@@ -13,7 +13,7 @@ class Router
         '/playerstochallenge' => \CorrectHorseBattery\Controllers\ChallengeablePlayers::class,
     ];
 
-    public function route(Request $url)
+    public function route(Request $request)
     {
         $url = $request->getUri()->getPath();
 
