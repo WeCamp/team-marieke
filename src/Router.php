@@ -2,6 +2,7 @@
 
 namespace CorrectHorseBattery;
 
+use Amp\Http\Server\Request;
 use Amp\Http\Server\Response;
 use Amp\Http\Status;
 
@@ -12,10 +13,13 @@ class Router
         '/playerstochallenge' => \CorrectHorseBattery\Controllers\ChallengeablePlayers::class,
     ];
 
-    public function route(string $url)
+    public function route(Request $url)
     {
+        $url = $request->getUri()->getPath();
+
+        // If a controller for this URL exists, create it and execute it with the request
         if (isset($this->routes[$url])) {
-            return (new $this->routes[$url])();
+            return (new $this->routes[$url])($request);
         }
 
         return new Response(Status::NOT_FOUND);

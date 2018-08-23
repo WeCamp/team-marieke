@@ -19,7 +19,7 @@ Amp\Loop::run(function () {
 
     $router = new \CorrectHorseBattery\Router;
     $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log, $router) {
-        return $router->route($request->getUri()->getPath());
+        return $router->route($request);
     }), $log);
 
     yield $server->start();
