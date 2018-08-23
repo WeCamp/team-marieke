@@ -4,7 +4,7 @@ namespace CorrectHorseBattery\Controllers;
 
 use Amp\Http\Server\Response;
 use Amp\Http\Status;
-use CorrectHorstBattery\Repositories\Players;
+use CorrectHorseBattery\Repositories\Players;
 
 class Login
 {
