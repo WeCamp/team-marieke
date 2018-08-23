@@ -2,7 +2,7 @@
     <div id="app">
         <div v-if="usernameOfSignedOnUser !== null">
             <p>Currently signed on as <b>{{ usernameOfSignedOnUser }}</b></p>
-            <players-to-challenge :username-is-challenged-to-duel="usernameOfChallengedToDuel" :username-of-signed-on-user="usernameOfSignedOnUser"></players-to-challenge>
+            <players-to-challenge :username-is-challenged-to-duel.sync="usernameOfChallengedToDuel" :username-of-signed-on-user="usernameOfSignedOnUser"></players-to-challenge>
         </div>
         <div v-else>
             <sign-on :username-of-signed-on-user.sync="usernameOfSignedOnUser"></sign-on>

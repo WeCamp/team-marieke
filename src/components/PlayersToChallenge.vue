@@ -13,7 +13,7 @@
                     :key="user.username">
                     <td>
                         <button type="button" @click="challenge(user.username)">{{ user.username }}</button>
-                        <b v-if="usernameOfChallengedToDuel === user.username">challenged</b>
+                        <strong v-if="usernameOfChallengedToDuel === user.username">challenged</strong>
                     </td>
                 </tr>
             </tbody>
