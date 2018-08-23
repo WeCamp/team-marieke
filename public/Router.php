@@ -9,7 +9,7 @@ class Router
 {
     private $routes = [
         '/' => \CorrectHorseBattery\Controllers\Login::class,
-        '/players/challengeable' => \CorrectHorseBattery\Controllers\ChallengeablePlayers::class,
+        '/playerstochallenge' => \CorrectHorseBattery\Controllers\ChallengeablePlayers::class,
     ];
 
     public function route(string $url)
