@@ -17,30 +17,9 @@ Amp\Loop::run(function () {
 
     $log = new \Monolog\Logger('app', [new \Monolog\Handler\StreamHandler('php://stderr')]);
 
-    $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log) {
-        if ($request->getUri()->getPath() === '/') {
-            return new Response(Status::OK, [
-                'content-type' => 'application/json',
-                "Access-Control-Allow-Origin" => '*',
-            ], json_encode([
-                ['username' => 'ingmar'],
-                ['username' => 'jakob'],
-                ['username' => 'gedi'],
-            ]));
-        } elseif ($request->getUri()->getPath() === '/players/challengable') {
-            return new Response(Status::OK, [
-                'content-type' => 'application/json',
-                "Access-Control-Allow-Origin" => '*',
-            ], json_encode([
-                ['username' => 'jakob'],
-                ['username' => 'gedi'],
-            ]));
-        }
-
-        return new Response(Status::OK, [
-            "content-type" => "text/plain; charset=utf-8",
-            "Access-Control-Allow-Origin" => '*',
-        ], "Hello, World!");
+    $router = new \CorrectHorseBattery\Router;
+    $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log, $router) {
+        return $router->route($request->getUri()->getPath());
     }), $log);
 
     yield $server->start();
