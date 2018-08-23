@@ -30,6 +30,10 @@
     import axios from 'axios';
 
     export default {
+        props: [
+            'usernameOfSignedOnUser',
+        ],
+
         data() {
             return {
                 users: [],
@@ -60,10 +64,6 @@
                 }).then(() => this.state = 'waiting');
             },
         },
-
-        props: [
-            'usernameOfSignedOnUser',
-        ],
 
         computed: {
             message() {
