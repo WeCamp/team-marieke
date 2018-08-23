@@ -1,15 +1,15 @@
 <template>
     <div id="app">
         <p>Currently signed on as <b>{{ usernameOfSignedOnUser }}</b></p>
-        <users :username-of-signed-on-user.sync="usernameOfSignedOnUser"></users>
+        <sign-on :username-of-signed-on-user.sync="usernameOfSignedOnUser"></sign-on>
     </div>
 </template>
 
 <script>
-    import Users from './components/Users.vue';
+    import SignOn from './components/SignOn.vue';
 
     export default {
-    components: { Users },
+    components: { SignOn },
     data() {
         return {
             usernameOfSignedOnUser: null,
