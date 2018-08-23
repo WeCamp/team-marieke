@@ -17,22 +17,15 @@ Amp\Loop::run(function () {
 
     $log = new \Monolog\Logger('app', [new \Monolog\Handler\StreamHandler('php://stderr')]);
 
-    $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log) {
-        if ($request->getUri()->getPath() === '/') {
+    $router = new \CorrectHorseBattery\Router;
+    $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log, $router) {
+        if ($request->getMethod() === 'OPTIONS') {
             return new Response(Status::OK, [
-                'content-type' => 'application/json',
-                "Access-Control-Allow-Origin" => '*',
-            ], json_encode([
-                ['username' => 'ingmar'],
-                ['username' => 'jakob'],
-                ['username' => 'gedi'],
-            ]));
+                'Access-Control-Allow-Origin' => '*',
+                'Access-Control-Allow-Headers' => '*',
+            ]);
         }
-
-        return new Response(Status::OK, [
-            "content-type" => "text/plain; charset=utf-8",
-            "Access-Control-Allow-Origin" => '*',
-        ], "Hello, World!");
+        return $router->route($request);
     }), $log);
 
     yield $server->start();
