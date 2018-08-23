@@ -28,6 +28,7 @@
         data() {
             return {
                 users: [],
+                usernameOfChallengedToDuel: null,
             };
         },
 
@@ -43,13 +44,12 @@
 
         methods: {
             challenge(username) {
-                this.$emit('update:usernameOfChallengedToDuel', username);
+                this.usernameOfChallengedToDuel = username;
             }
         },
 
         props: [
             'usernameOfSignedOnUser',
-            'usernameOfChallengedToDuel',
         ],
     };
 </script>
