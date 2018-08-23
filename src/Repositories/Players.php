@@ -1,6 +1,6 @@
 <?php
 
-namespace CorrectHorstBattery\Repositories;
+namespace CorrectHorseBattery\Repositories;
 
 class Players
 {
