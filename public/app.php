@@ -22,7 +22,7 @@ Amp\Loop::run(function () {
         if ($request->getMethod() === 'OPTIONS') {
             return new Response(Status::OK, [
                 'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Headers' => ['*'],
+                'Access-Control-Allow-Headers' => '*',
             ]);
         }
         return $router->route($request);
