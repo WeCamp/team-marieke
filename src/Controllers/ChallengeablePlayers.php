@@ -19,6 +19,13 @@ class ChallengeablePlayers
             return new Response(Status::BAD_REQUEST, [], 'You must send a "Player" header with your username');
         }
 
+        $candidatePlayers = array_filter($allPlayers, function ($player) use ($currentPlayer) {
+            return $player['username'] === $currentPlayer;
+        });
+        if (count($candidatePlayers) < 1) {
+            return new Response(Status::FORBIDDEN, [], 'You do not exist');
+        }
+
         $challengeablePlayers = array_filter($allPlayers, function ($player) use ($currentPlayer) {
             return $player['username'] !== $currentPlayer;
         });
