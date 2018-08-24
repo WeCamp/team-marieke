@@ -2,7 +2,12 @@
     <div>
         <h1>Players to challenge</h1>
 
-        <table>
+        <div v-if="state !== 'initial'"
+            class="alert" :class="`alert-${this.state}`">
+            {{ message }}
+        </div>
+
+        <table v-if="state === 'initial'">
             <thead>
                 <tr>
                     <th>Name</th>
@@ -25,10 +30,16 @@
     import axios from 'axios';
 
     export default {
+        props: [
+            'usernameOfSignedOnUser',
+        ],
+
         data() {
             return {
                 users: [],
                 usernameOfChallengedToDuel: null,
+                state: 'initial', // initial -> waiting -> accepted
+                                  //                    -> rejected
             };
         },
 
@@ -45,11 +56,45 @@
         methods: {
             challenge(username) {
                 this.usernameOfChallengedToDuel = username;
-            }
+                this.state = 'waiting';
+                axios.post('http://localhost:8080/challenge', {username: this.usernameOfChallengedToDuel}, {
+                    headers: {
+                        Player: this.usernameOfSignedOnUser,
+                    }
+                }).then(() => this.state = 'waiting');
+            },
         },
 
-        props: [
-            'usernameOfSignedOnUser',
-        ],
+        computed: {
+            message() {
+                if (this.state === 'waiting') {
+                    return 'waiting for challenge acceptance';
+                } else if (this.state === 'accepted') {
+                    return 'challenge has been accepted by ' + this.usernameOfChallengedToDuel;
+                } else if (this.state === 'rejected') {
+                    return 'challenge denied!';
+                }
+            },
+        },
     };
 </script>
+
+<style scoped>
+.alert {
+    padding: 1em;
+    border: 1px solid black;
+    border-radius: 1em;
+}
+
+.alert-waiting {
+    background-color: #fc6;
+}
+
+.alert-accepted {
+    background-color: #cf6;
+}
+
+.alert-rejected {
+    background-color: #f99;
+}
+</style>
