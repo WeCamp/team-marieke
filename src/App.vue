@@ -33,9 +33,11 @@
             };
         },
         mounted() {
-            window.ws.addEventListener("message", (e) => {
-                const data = JSON.parse(e.data);
-                this.challengingPlayer = data.challenging_player;
+            window.ws.addEventListener('message', event => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'challenge_to_duel') {
+                    this.challengingPlayer = data.challenging_player;
+                }
             });
         },
     };
