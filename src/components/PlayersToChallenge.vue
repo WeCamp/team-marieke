@@ -51,6 +51,13 @@
             }).then(response => {
                 this.users = response.data;
             });
+
+            window.ws.addEventListener('message', event => {
+                const data = JSON.parse(event.data);
+                if (data.type  === 'challenge_response') {
+                    this.state = data.accept ? 'accepted' : 'rejected';
+                }
+            });
         },
 
         methods: {

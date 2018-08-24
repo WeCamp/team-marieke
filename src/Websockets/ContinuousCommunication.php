@@ -32,14 +32,21 @@ class ContinuousCommunication implements Application
     {
         $contents = json_decode(yield $message->read(), true);
 
-        if(is_array($contents) && array_key_exists('type', $contents)) {
+        echo "Received websocket message: " . var_export($contents, true);
+
+        if (is_array($contents) && array_key_exists('type', $contents)) {
             switch ($contents['type']) {
                 case "signOn":
                     $this->clientIds[$contents['username']] = $clientId;
                     break;
-                case "challenged":
-                    break;
-                case "acceptedChallenge":
+                case 'challenge_response':
+                    $challengingPlayer = $contents['challengingPlayer'];
+                    $this->sendDataToPlayer($challengingPlayer, json_encode([
+                        'type' => 'challenge_response',
+                        'challengingPlayer' => $contents['challengingPlayer'],
+                        'challengedPlayer' => $contents['challengedPlayer'],
+                        'accept' => $contents['accept'],
+                    ]));
                     break;
             }
         }
