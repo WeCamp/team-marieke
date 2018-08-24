@@ -20,4 +20,9 @@ final class Move
     {
         return $this->value === $other->value;
     }
+
+    public function toString()
+    {
+        return $this->value;
+    }
 }
