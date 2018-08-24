@@ -2,7 +2,7 @@
     <div id="app">
         <challenge-notification
             :challengingPlayer="challengingPlayer"
-            :myself="usernameOfSignedOnUser">
+            :challengedPlayer="usernameOfSignedOnUser">
         </challenge-notification>
 
         <div v-if="usernameOfSignedOnUser !== null">

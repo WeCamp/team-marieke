@@ -9,13 +9,13 @@
 
 <script>
 export default {
-    props: ['challengingPlayer', 'myself'],
+    props: ['challengingPlayer', 'challengedPlayer'],
 
     methods: {
         reply(acceptance) {
             window.ws.send(JSON.stringify({
                 type: 'challenge_response',
-                myself: this.myself,
+                challengedPlayer: this.challengedPlayer,
                 challengingPlayer: this.challengingPlayer,
                 accept: acceptance,
             }));
