@@ -19,7 +19,8 @@
             </div>
         </div>
 
-        <duel v-if="duelId" :player="usernameOfSignedOnUser" :duelId="duelId"></duel>
+        <duel v-if="duelId" :player="usernameOfSignedOnUser" :duelId="duelId"
+            @duelResult="endDuel"></duel>
     </div>
 </template>
 
@@ -64,6 +65,17 @@
                     this.challengingPlayer = data.challenging_player;
                 }
             });
+        },
+
+        methods: {
+            endDuel(data) {
+                if (data.is_draw) {
+                    alert('it\'s a draw!');
+                    return;
+                }
+
+                alert(`The w(e)in(n)er is ${data.winner}!`);
+            },
         },
     };
 </script>

@@ -67,6 +67,7 @@ final class MakeMove
         Player $playerToAttack
     ): void {
         $this->continuousCommunication->sendDataToPlayer($username, json_encode([
+            'type' => 'duel_result',
             'is_draw' => $duel->isDraw(),
             'winner' => $duel->winner(),
             'attacks' => [

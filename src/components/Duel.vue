@@ -25,8 +25,8 @@ export default {
     mounted() {
         window.ws.addEventListener('message', event => {
             const data = JSON.parse(event.data);
-            if (data.type === 'result') {
-                this.$emit('end', data.result);
+            if (data.type === 'duel_result') {
+                this.$emit('duelResult', data);
             }
         });
     },
