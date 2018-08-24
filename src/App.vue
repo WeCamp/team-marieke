@@ -15,10 +15,24 @@
 </template>
 
 <script>
+    import axios from 'axios';
     import SignOn from './components/SignOn.vue';
     import PlayersToChallenge from './components/PlayersToChallenge';
 
     export default {
+        watch: {
+            usernameOfSignedOnUser(newValue, oldValue) {
+                if (newValue) {
+                    axios.get('http://localhost:8080/challengeofplayer', {headers: {Player: newValue}})
+                        .then(response => {
+                            const challengerUsername = response.data.challenger_username;
+                            if (challengerUsername) {
+                                this.challengingPlayer = challengerUsername;
+                            }
+                        });
+                }
+            }
+        },
         components: {
             SignOn,
             PlayersToChallenge,

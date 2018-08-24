@@ -44,6 +44,9 @@ class Router
             '/challengeplayer' => function () use ($continuousCommunication, $players) {
                 return new \CorrectHorseBattery\Controllers\ChallengePlayer($players(), $continuousCommunication);
             },
+            '/challengeofplayer' => function () {
+                return new \CorrectHorseBattery\Controllers\ChallengeOfPlayer();
+            },
         ];
     }
 

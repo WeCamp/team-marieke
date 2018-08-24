@@ -44,4 +44,9 @@ final class Player
             'challengedBy' => $this->challengedBy,
         ];
     }
+
+    public function challengedBy(): ?string
+    {
+        return $this->challengedBy;
+    }
 }
