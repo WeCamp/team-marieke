@@ -39,9 +39,14 @@ class ContinuousCommunication implements Application
                 case "signOn":
                     $this->clientIds[$contents['username']] = $clientId;
                     break;
-                case "challenged":
-                    break;
-                case "acceptedChallenge":
+                case 'challenge_response':
+                    $challengingPlayer = $contents['challengingPlayer'];
+                    $this->sendDataToPlayer($challengingPlayer, json_encode([
+                        'type' => 'challenge_response',
+                        'challengingPlayer' => $contents['challengingPlayer'],
+                        'challengedPlayer' => $contents['challengedPlayer'],
+                        'accept' => $contents['accept'],
+                    ]));
                     break;
             }
         }
