@@ -4,7 +4,8 @@
     "require": {
         "php": "^7.2",
         "amphp/http-server": "^0.8.2",
-        "monolog/monolog": "^1.23"
+        "monolog/monolog": "^1.23",
+        "amphp/websocket-server": "dev-master"
     },
     "autoload": {
         "psr-4": {
