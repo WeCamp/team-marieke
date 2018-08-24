@@ -20,7 +20,7 @@ Amp\Loop::run(function () {
     $eventBus = new \CorrectHorseBattery\EventBus\EventBus($log);
 
     // Setup the websocket
-    $continuousCommunication = new ContinuousCommunication($eventBus);
+    $continuousCommunication = new ContinuousCommunication($eventBus, $log);
 
     $websocket = new Websocket($continuousCommunication);
 
@@ -52,7 +52,8 @@ Amp\Loop::run(function () {
     );
 
     $corsMiddleware = new class implements Middleware {
-        public function handleRequest(Request $request, RequestHandler $next): \Amp\Promise {
+        public function handleRequest(Request $request, RequestHandler $next): \Amp\Promise
+        {
             return call(function () use ($request, $next) {
                 $response = yield $next->handleRequest($request);
 

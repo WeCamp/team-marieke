@@ -9,6 +9,7 @@ use Amp\Http\Server\Websocket\Endpoint;
 use Amp\Http\Server\Websocket\Message;
 use CorrectHorseBattery\EventBus\EventBus;
 use CorrectHorseBattery\Events\ChallengeToDuelAccepted;
+use Psr\Log\LoggerInterface;
 
 class ContinuousCommunication implements Application
 {
@@ -16,10 +17,12 @@ class ContinuousCommunication implements Application
     private $endpoint;
     private $clientIds = [];
     private $eventBus;
+    private $logger;
 
-    public function __construct(EventBus $eventBus)
+    public function __construct(EventBus $eventBus, LoggerInterface $logger)
     {
         $this->eventBus = $eventBus;
+        $this->logger = $logger;
     }
 
     public function onStart(Endpoint $endpoint)
@@ -49,20 +52,21 @@ class ContinuousCommunication implements Application
                     break;
                 case 'challenge_response':
                     $challengingPlayer = $contents['challengingPlayer'];
+                    $challengedPlayer = $contents['challengedPlayer'];
 
                     if ($contents['accept']) {
                         $duelId = uniqid('', true);
                         $this->eventBus->dispatch(new ChallengeToDuelAccepted(
                             $duelId,
-                            $contents['challengingPlayer'],
-                            $contents['challengedPlayer']
+                            $challengingPlayer,
+                            $challengedPlayer
                         ));
                     }
 
                     $this->sendDataToPlayer($challengingPlayer, json_encode([
                         'type' => 'challenge_response',
-                        'challengingPlayer' => $contents['challengingPlayer'],
-                        'challengedPlayer' => $contents['challengedPlayer'],
+                        'challengingPlayer' => $challengingPlayer,
+                        'challengedPlayer' => $challengedPlayer,
                         'accept' => $contents['accept'],
                         'duel_id' => $duelId ?? null,
                     ]));
@@ -89,6 +93,8 @@ class ContinuousCommunication implements Application
 
     public function sendDataToPlayer(string $username, string $data): void
     {
+        $this->logger->debug('Send websocket message', ['payload' => $data]);
+
         if (array_key_exists($username, $this->clientIds)) {
             $this->endpoint->send($data, $this->clientIds[$username]);
         }
