@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <duel v-if="duelId" :player="usernameOfSignedOnUser"></duel>
+        <duel v-if="duelId" :player="usernameOfSignedOnUser" :duelId="duelId"></duel>
     </div>
 </template>
 
