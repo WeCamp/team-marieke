@@ -1,6 +1,8 @@
 <?php
 
+use Amp\Http\Server\Middleware;
 use Amp\Http\Server\Request;
+use Amp\Http\Server\RequestHandler;
 use Amp\Http\Server\RequestHandler\CallableRequestHandler;
 use Amp\Http\Server\Response;
 use Amp\Http\Server\Server;
@@ -8,6 +10,7 @@ use Amp\Http\Server\Websocket\Websocket;
 use Amp\Http\Status;
 use Amp\Socket;
 use CorrectHorseBattery\Websockets\ContinuousCommunication;
+use function Amp\call;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
@@ -32,15 +35,35 @@ Amp\Loop::run(function () {
     ];
 
     $router = new \CorrectHorseBattery\Router($continuousCommunication);
-    $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log, $router) {
-        if ($request->getMethod() === 'OPTIONS') {
-            return new Response(Status::OK, [
-                'Access-Control-Allow-Origin' => '*',
-                'Access-Control-Allow-Headers' => '*',
-            ]);
+
+    $requestHandler = new CallableRequestHandler(
+        function (Request $request) use ($log, $router) {
+            if ($request->getMethod() === 'OPTIONS') {
+                return new Response(Status::OK, [
+                    'Access-Control-Allow-Origin' => '*',
+                    'Access-Control-Allow-Headers' => '*',
+                ]);
+            }
+
+            return $router->route($request);
         }
-        return $router->route($request);
-    }), $log);
+    );
+
+    $corsMiddleware = new class implements Middleware {
+        public function handleRequest(Request $request, RequestHandler $next): \Amp\Promise {
+            return call(function () use ($request, $next) {
+                $response = yield $next->handleRequest($request);
+
+                $response->setHeader('Access-Control-Allow-Origin', '*');
+                $response->setHeader('Access-Control-Allow-Headers', '*');
+                $response->setHeader('content-type', 'application/json');
+
+                return $response;
+            });
+        }
+    };
+
+    $server = new Server($sockets, Middleware\stack($requestHandler, $corsMiddleware), $log);
 
     yield $server->start();
 
