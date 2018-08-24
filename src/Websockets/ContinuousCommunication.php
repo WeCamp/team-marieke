@@ -7,12 +7,20 @@ use Amp\Http\Server\Response;
 use Amp\Http\Server\Websocket\Application;
 use Amp\Http\Server\Websocket\Endpoint;
 use Amp\Http\Server\Websocket\Message;
+use CorrectHorseBattery\EventBus\EventBus;
+use CorrectHorseBattery\Events\ChallengeToDuelAccepted;
 
 class ContinuousCommunication implements Application
 {
     /** @var Endpoint */
     private $endpoint;
     private $clientIds = [];
+    private $eventBus;
+
+    public function __construct(EventBus $eventBus)
+    {
+        $this->eventBus = $eventBus;
+    }
 
     public function onStart(Endpoint $endpoint)
     {
@@ -41,6 +49,14 @@ class ContinuousCommunication implements Application
                     break;
                 case 'challenge_response':
                     $challengingPlayer = $contents['challengingPlayer'];
+
+                    if ($contents['accept']) {
+                        $this->eventBus->dispatch(new ChallengeToDuelAccepted(
+                            $contents['challengingPlayer'],
+                            $contents['challengedPlayer']
+                        ));
+                    }
+
                     $this->sendDataToPlayer($challengingPlayer, json_encode([
                         'type' => 'challenge_response',
                         'challengingPlayer' => $contents['challengingPlayer'],

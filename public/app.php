@@ -17,8 +17,10 @@ require_once __DIR__ . '/../vendor/autoload.php';
 Amp\Loop::run(function () {
     $log = new \Monolog\Logger('app', [new \Monolog\Handler\StreamHandler('php://stderr')]);
 
+    $eventBus = new \CorrectHorseBattery\EventBus\EventBus();
+
     // Setup the websocket
-    $continuousCommunication = new ContinuousCommunication;
+    $continuousCommunication = new ContinuousCommunication($eventBus);
 
     $websocket = new Websocket($continuousCommunication);
 
@@ -34,7 +36,7 @@ Amp\Loop::run(function () {
         Socket\listen("[::]:8080"),
     ];
 
-    $router = new \CorrectHorseBattery\Router($continuousCommunication);
+    $router = new \CorrectHorseBattery\Router($continuousCommunication, $eventBus);
 
     $requestHandler = new CallableRequestHandler(
         function (Request $request) use ($log, $router) {
