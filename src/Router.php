@@ -56,6 +56,9 @@ class Router
             '/challengeofplayer' => function () {
                 return new \CorrectHorseBattery\Controllers\ChallengeOfPlayer();
             },
+            '/move' => function () {
+                return new \CorrectHorseBattery\Controllers\MakeMove($players(), $duels(), $continuousCommunication);
+            },
         ];
 
         $eventBus->subscribe(
