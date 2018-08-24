@@ -17,7 +17,7 @@ export default {
             if (data.type === 'challenge_response') {
                 const { accept, duel_id } = data;
                 if (accept) {
-                     this.$emit('startDuel', { duel_id });
+                     this.$emit('startDuel', duel_id);
                 } else {
                     this.$emit('update:challengingPlayer', null);
                 }

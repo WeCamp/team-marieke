@@ -4,9 +4,9 @@
         <p>
             Pick your move: <br>
 
-            <button :disabled="myMove" @click="play('rock')">Rock</button>
-            <button :disabled="myMove" @click="play('paper')">Paper</button>
-            <button :disabled="myMove" @click="play('scissors')">Scissors</button>
+            <button :disabled="myMove" @click="play(0)">Rock</button>
+            <button :disabled="myMove" @click="play(1)">Paper</button>
+            <button :disabled="myMove" @click="play(2)">Scissors</button>
         </p>
     </div>
 </template>
@@ -34,7 +34,7 @@ export default {
     methods: {
         play(move) {
             this.myMove = move;
-            axios.post('/move', { move, duel_id: this.duelId }, {
+            axios.post('http://localhost:8080/move', { move, duel_id: this.duelId }, {
                 headers: {
                     Player: this.player,
                 },

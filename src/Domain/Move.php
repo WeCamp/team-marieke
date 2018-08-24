@@ -6,12 +6,12 @@ final class Move
 {
     private $value;
 
-    private function __construct(string $value)
+    private function __construct(int $value)
     {
         $this->value = $value;
     }
 
-    public static function fromString(string $value): Move
+    public static function fromString(int $value): Move
     {
         return new Move($value);
     }

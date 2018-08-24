@@ -58,7 +58,7 @@
                     const {accept, duel_id} = data;
                     if (accept) {
                         this.state = 'accepted';
-                        setTimeout(() => this.$emit('startDuel', { duel_id } ), 2000);
+                        setTimeout(() => this.$emit('startDuel', duel_id), 2000);
                     }
                     else {
                         this.state = 'rejected';
