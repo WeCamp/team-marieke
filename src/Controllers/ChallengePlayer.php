@@ -5,20 +5,25 @@ namespace CorrectHorseBattery\Controllers;
 use Amp\Http\Server\Request;
 use Amp\Http\Server\Response;
 use Amp\Http\Status;
+use CorrectHorseBattery\Domain\Player;
 use CorrectHorseBattery\Domain\PlayerDoesNotExist;
 use CorrectHorseBattery\Repositories\Players;
+use CorrectHorseBattery\Websockets\ContinuousCommunication;
 
 final class ChallengePlayer
 {
     private $players;
+    private $continuousCommunication;
 
-    public function __construct(Players $players)
+    public function __construct(Players $players, ContinuousCommunication $continuousCommunication)
     {
         $this->players = $players;
+        $this->continuousCommunication = $continuousCommunication;
     }
 
     public function __invoke(Request $request)
     {
+        /** @var Player $challengingPlayer */
         $challengingPlayer = $request->getAttribute('player');
 
         $requestData = json_decode(yield $request->getBody()->read(), true);
@@ -36,6 +41,11 @@ final class ChallengePlayer
 
         $this->players->save($challengingPlayer);
         $this->players->save($playerToChallenge);
+
+        $this->continuousCommunication->sendDataToPlayer($playerToChallenge->username(), json_encode([
+            'type' => 'challenge_to_duel',
+            'challenging_player' => $challengingPlayer->username(),
+        ]));
 
         return new Response(Status::OK);
     }

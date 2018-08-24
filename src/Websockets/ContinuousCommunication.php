@@ -7,19 +7,16 @@ use Amp\Http\Server\Response;
 use Amp\Http\Server\Websocket\Application;
 use Amp\Http\Server\Websocket\Endpoint;
 use Amp\Http\Server\Websocket\Message;
-use Amp\Loop;
-use CorrectHorseBattery\Domain\Player;
 
 class ContinuousCommunication implements Application
 {
     /** @var Endpoint */
     private $endpoint;
-    private $usernamesOfClients = [];
+    private $clientIds = [];
 
     public function onStart(Endpoint $endpoint)
     {
         $this->endpoint = $endpoint;
-        $this->endpoint->broadcast("broadcast alert!!");
     }
 
     public function onHandshake(Request $request, Response $response)
@@ -29,7 +26,6 @@ class ContinuousCommunication implements Application
 
     public function onOpen(int $clientId, Request $request)
     {
-        $this->endpoint->broadcast("onOpen test");
     }
 
     public function onData(int $clientId, Message $message)
@@ -39,10 +35,9 @@ class ContinuousCommunication implements Application
         if(is_array($contents) && array_key_exists('type', $contents)) {
             switch ($contents['type']) {
                 case "signOn":
-                    $this->usernamesOfClients[$clientId] = $contents['username'];
+                    $this->clientIds[$contents['username']] = $clientId;
                     break;
                 case "challenged":
-                    $username = $this->usernameFromClientId($clientId);
                     break;
                 case "acceptedChallenge":
                     break;
@@ -60,8 +55,10 @@ class ContinuousCommunication implements Application
         // do nothing
     }
 
-    private function usernameFromClientId(int $clientId)
+    public function sendDataToPlayer(string $username, string $data): void
     {
-        return $this->usernamesOfClients[$clientId];
+        if (array_key_exists($username, $this->clientIds)) {
+            $this->endpoint->send($data, $this->clientIds[$username]);
+        }
     }
 }

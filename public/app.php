@@ -15,7 +15,9 @@ Amp\Loop::run(function () {
     $log = new \Monolog\Logger('app', [new \Monolog\Handler\StreamHandler('php://stderr')]);
 
     // Setup the websocket
-    $websocket = new Websocket(new ContinuousCommunication);
+    $continuousCommunication = new ContinuousCommunication;
+
+    $websocket = new Websocket($continuousCommunication);
 
     $websocketServer = new Server([
         Socket\listen('0.0.0.0:9001'),
@@ -29,7 +31,7 @@ Amp\Loop::run(function () {
         Socket\listen("[::]:8080"),
     ];
 
-    $router = new \CorrectHorseBattery\Router;
+    $router = new \CorrectHorseBattery\Router($continuousCommunication);
     $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log, $router) {
         if ($request->getMethod() === 'OPTIONS') {
             return new Response(Status::OK, [
