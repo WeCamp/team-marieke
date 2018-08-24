@@ -20,9 +20,6 @@ class ChallengeablePlayers
             return $player['username'] !== $currentPlayer->username();
         });
 
-        return new Response(Status::OK, [
-            'content-type' => 'application/json',
-            "Access-Control-Allow-Origin" => '*',
-        ], json_encode($challengeablePlayers));
+        return new Response(Status::OK, [], json_encode($challengeablePlayers));
     }
 }
