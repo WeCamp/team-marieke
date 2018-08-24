@@ -1,8 +1,9 @@
 <template>
     <div id="app">
-        <div v-if="challengingPlayer !== null" class="alert alert-waiting">
-            You have been challenged to a duel by <strong>{{challengingPlayer}}</strong>!
-        </div>
+        <challenge-notification
+            :challengingPlayer="challengingPlayer"
+            :challengedPlayer="usernameOfSignedOnUser">
+        </challenge-notification>
 
         <div v-if="usernameOfSignedOnUser !== null">
             <p>Currently signed on as <b>{{ usernameOfSignedOnUser }}</b></p>
@@ -18,6 +19,7 @@
     import axios from 'axios';
     import SignOn from './components/SignOn.vue';
     import PlayersToChallenge from './components/PlayersToChallenge';
+    import ChallengeNotification from './components/ChallengeNotification';
 
     export default {
         watch: {
@@ -36,6 +38,7 @@
         components: {
             SignOn,
             PlayersToChallenge,
+            ChallengeNotification,
         },
         data() {
             return {
@@ -44,9 +47,11 @@
             };
         },
         mounted() {
-            window.ws.addEventListener("message", (e) => {
-                const data = JSON.parse(e.data);
-                this.challengingPlayer = data.challenging_player;
+            window.ws.addEventListener('message', event => {
+                const data = JSON.parse(event.data);
+                if (data.type === 'challenge_to_duel') {
+                    this.challengingPlayer = data.challenging_player;
+                }
             });
         },
     };
