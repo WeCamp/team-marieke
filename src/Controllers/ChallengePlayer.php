@@ -5,31 +5,21 @@ namespace CorrectHorseBattery\Controllers;
 use Amp\Http\Server\Request;
 use Amp\Http\Server\Response;
 use Amp\Http\Status;
-use CorrectHorseBattery\Authentication\AuthenticationContext;
-use CorrectHorseBattery\Authentication\NoPlayerSignedOn;
 use CorrectHorseBattery\Domain\PlayerDoesNotExist;
 use CorrectHorseBattery\Repositories\Players;
 
 final class ChallengePlayer
 {
-    private $authenticationContext;
     private $players;
 
-    public function __construct(AuthenticationContext $authenticationContext, Players $players)
+    public function __construct(Players $players)
     {
-        $this->authenticationContext = $authenticationContext;
         $this->players = $players;
     }
 
     public function __invoke(Request $request)
     {
-        try {
-            $challengingPlayer = $this->authenticationContext->currentSignedOnPlayer($request);
-        } catch (NoPlayerSignedOn $e) {
-            return new Response(Status::BAD_REQUEST, [], 'You must send a "Player" header with your username');
-        } catch (PlayerDoesNotExist $e) {
-            return new Response(Status::FORBIDDEN, [], 'You do not exist');
-        }
+        $challengingPlayer = $request->getAttribute('player');
 
         $requestData = json_decode(yield $request->getBody()->read(), true);
         if (!is_array($requestData) || !array_key_exists('user_to_challenge', $requestData)) {
