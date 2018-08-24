@@ -57,7 +57,9 @@
             challenge(username) {
                 this.usernameOfChallengedToDuel = username;
                 this.state = 'waiting';
-                axios.post('http://localhost:8080/challenge', {username: this.usernameOfChallengedToDuel}, {
+                axios.post('http://localhost:8080/challengeplayer', {
+                    user_to_challenge: this.usernameOfChallengedToDuel
+                }, {
                     headers: {
                         Player: this.usernameOfSignedOnUser,
                     }
