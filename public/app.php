@@ -4,18 +4,30 @@ use Amp\Http\Server\Request;
 use Amp\Http\Server\RequestHandler\CallableRequestHandler;
 use Amp\Http\Server\Response;
 use Amp\Http\Server\Server;
+use Amp\Http\Server\Websocket\Websocket;
 use Amp\Http\Status;
 use Amp\Socket;
+use CorrectHorseBattery\Websockets\ContinuousCommunication;
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 Amp\Loop::run(function () {
+    $log = new \Monolog\Logger('app', [new \Monolog\Handler\StreamHandler('php://stderr')]);
+
+    // Setup the websocket
+    $websocket = new Websocket(new ContinuousCommunication);
+
+    $websocketServer = new Server([
+        Socket\listen('0.0.0.0:9001'),
+        Socket\listen('[::]:9001'),
+    ], $websocket, $log);
+    yield $websocketServer->start();
+
+    // Set the HTTP servers
     $sockets = [
         Socket\listen("0.0.0.0:8080"),
         Socket\listen("[::]:8080"),
     ];
-
-    $log = new \Monolog\Logger('app', [new \Monolog\Handler\StreamHandler('php://stderr')]);
 
     $router = new \CorrectHorseBattery\Router;
     $server = new Server($sockets, new CallableRequestHandler(function (Request $request) use ($log, $router) {

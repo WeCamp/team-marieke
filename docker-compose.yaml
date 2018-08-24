@@ -5,6 +5,7 @@ services:
     init: true
     ports:
     - "8080:8080"
+    - "9001:9001"
     volumes:
     - .:/app
     command: php /app/public/app.php
