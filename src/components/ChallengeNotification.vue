@@ -14,7 +14,7 @@ export default {
     mounted() {
         window.ws.addEventListener('message', event => {
             const data = JSON.parse(event.data);
-            if (data.type === 'challenge_accepted') {
+            if (data.type === 'challenge_response') {
                 const { accept, duel_id } = data;
                 if (accept) {
                      this.$emit('startDuel', { duel_id });

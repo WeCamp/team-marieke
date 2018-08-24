@@ -72,7 +72,9 @@ class ContinuousCommunication implements Application
                     ]));
 
                     $this->sendDataToPlayer($challengedPlayer, json_encode([
-                        'type' => 'challenged_accepted',
+                        'type' => 'challenge_response',
+                        'challengingPlayer' => $challengingPlayer,
+                        'challengedPlayer' => $challengedPlayer,
                         'accept' => $contents['accept'],
                         'duel_id' => $duelId ?? null,
                     ]));
