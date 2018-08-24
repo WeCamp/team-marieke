@@ -12,6 +12,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
     props: ['player'],
 
@@ -32,12 +34,11 @@ export default {
     methods: {
         play(move) {
             this.myMove = move;
-
-            window.ws.send(JSON.stringify({
-                type: 'move',
-                username: this.player,
-                move,
-            }));
+            axios.post('/move', { move }, {
+                headers: {
+                    Player: this.player,
+                },
+            });
         },
     },
 };
