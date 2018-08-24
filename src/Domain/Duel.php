@@ -33,11 +33,28 @@ final class Duel
 
     public function winner(): ?string
     {
+        $result = "TWLLTWWLT"[$this->calculateWinner()];
+
+        if($result == "W") {
+            return $this->usernameOfSecondPlayer;
+        }
+        if($result == "L") {
+            return $this->usernameOfFirstPlayer;
+        }
+
+        return null;
     }
 
     public function moveOfPlayer(string $username): Move
     {
         return $this->moves[$username];
+    }
+
+    private function calculateWinner()
+    {
+        $firstPlayer = (int)$this->moveOfPlayer($this->usernameOfFirstPlayer)->toString();
+        $secondPlayer = (int)$this->moveOfPlayer($this->usernameOfSecondPlayer)->toString();
+        return $firstPlayer * 3 + $secondPlayer;
     }
 
     public function otherPlayerThan(string $username): string
