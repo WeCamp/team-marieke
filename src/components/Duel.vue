@@ -15,7 +15,7 @@
 import axios from 'axios';
 
 export default {
-    props: ['player'],
+    props: ['player', 'duelId'],
 
     data() {
         return {
@@ -34,7 +34,7 @@ export default {
     methods: {
         play(move) {
             this.myMove = move;
-            axios.post('/move', { move }, {
+            axios.post('/move', { move, duel_id: this.duelId }, {
                 headers: {
                     Player: this.player,
                 },

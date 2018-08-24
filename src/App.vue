@@ -1,17 +1,17 @@
 <template>
     <div id="app">
-        <div v-if="!duelling">
+        <div v-if="!duelId">
             <challenge-notification
                 :challengingPlayer.sync="challengingPlayer"
                 :challengedPlayer="usernameOfSignedOnUser"
-                @startDuel="() => this.duelling = true">
+                @startDuel="(id) => this.duelId = id;">
             </challenge-notification>
 
             <div v-if="usernameOfSignedOnUser !== null">
                 <p>Currently signed on as <b>{{ usernameOfSignedOnUser }}</b></p>
                 <players-to-challenge
                     :username-of-signed-on-user="usernameOfSignedOnUser"
-                    @startDuel="() => this.duelling = true">
+                    @startDuel="(id) => this.duelId = id;">
                 </players-to-challenge>
             </div>
             <div v-else>
@@ -19,7 +19,7 @@
             </div>
         </div>
 
-        <duel v-if="duelling" :player="usernameOfSignedOnUser"></duel>
+        <duel v-if="duelId" :player="usernameOfSignedOnUser"></duel>
     </div>
 </template>
 
@@ -54,7 +54,7 @@
             return {
                 usernameOfSignedOnUser: null,
                 challengingPlayer: null,
-                duelling: false,
+                duelId: null,
             };
         },
         mounted() {

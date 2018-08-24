@@ -55,11 +55,13 @@
             window.ws.addEventListener('message', event => {
                 const data = JSON.parse(event.data);
                 if (data.type  === 'challenge_response') {
-                    this.state = data.accept ? 'accepted' : 'rejected';
-                    if (this.state === 'accepted') {
-                        setTimeout(() => this.$emit('startDuel'), 2000);
+                    const {accept, duel_id} = data;
+                    if (accept) {
+                        this.state = 'accepted';
+                        setTimeout(() => this.$emit('startDuel', { duel_id } ), 2000);
                     }
                     else {
+                        this.state = 'rejected';
                         this.usernameOfChallengedToDuel = null;
                         setTimeout(() => this.state = 'initial', 2000);
                     }
