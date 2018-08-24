@@ -23,7 +23,7 @@
 
     export default {
         watch: {
-            usernameOfSignedOnUser(newValue, oldValue) {
+            usernameOfSignedOnUser(newValue) {
                 if (newValue) {
                     axios.get('http://localhost:8080/challengeofplayer', {headers: {Player: newValue}})
                         .then(response => {
