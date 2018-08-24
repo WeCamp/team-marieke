@@ -1,8 +1,9 @@
 <template>
     <div id="app">
-        <div v-if="challengingPlayer !== null" class="alert alert-waiting">
-            You have been challenged to a duel by <strong>{{challengingPlayer}}</strong>!
-        </div>
+        <challenge-notification
+            :challengingPlayer="challengingPlayer"
+            :myself="usernameOfSignedOnUser">
+        </challenge-notification>
 
         <div v-if="usernameOfSignedOnUser !== null">
             <p>Currently signed on as <b>{{ usernameOfSignedOnUser }}</b></p>
@@ -17,11 +18,13 @@
 <script>
     import SignOn from './components/SignOn.vue';
     import PlayersToChallenge from './components/PlayersToChallenge';
+    import ChallengeNotification from './components/ChallengeNotification';
 
     export default {
         components: {
             SignOn,
             PlayersToChallenge,
+            ChallengeNotification,
         },
         data() {
             return {
