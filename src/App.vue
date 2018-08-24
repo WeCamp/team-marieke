@@ -4,14 +4,14 @@
             <challenge-notification
                 :challengingPlayer.sync="challengingPlayer"
                 :challengedPlayer="usernameOfSignedOnUser"
-                @startDuel="(id) => this.duelId = id;">
+                @startDuel="(id) => this.duelId = id">
             </challenge-notification>
 
             <div v-if="usernameOfSignedOnUser !== null">
                 <p>Currently signed on as <b>{{ usernameOfSignedOnUser }}</b></p>
                 <players-to-challenge
                     :username-of-signed-on-user="usernameOfSignedOnUser"
-                    @startDuel="(id) => this.duelId = id;">
+                    @startDuel="(id) => this.duelId = id">
                 </players-to-challenge>
             </div>
             <div v-else>
