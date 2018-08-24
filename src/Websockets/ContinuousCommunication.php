@@ -51,7 +51,9 @@ class ContinuousCommunication implements Application
                     $challengingPlayer = $contents['challengingPlayer'];
 
                     if ($contents['accept']) {
+                        $duelId = uniqid('', true);
                         $this->eventBus->dispatch(new ChallengeToDuelAccepted(
+                            $duelId,
                             $contents['challengingPlayer'],
                             $contents['challengedPlayer']
                         ));
@@ -62,6 +64,7 @@ class ContinuousCommunication implements Application
                         'challengingPlayer' => $contents['challengingPlayer'],
                         'challengedPlayer' => $contents['challengedPlayer'],
                         'accept' => $contents['accept'],
+                        'duel_id' => $duelId ?? null,
                     ]));
                     break;
             }

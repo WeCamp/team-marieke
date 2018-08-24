@@ -24,7 +24,7 @@ final class BeginDuelWhenChallengeToDuelAccepted
         $challengedPlayer = $this->players->getByUsername($event->challengedPlayer());
 
         $this->duels->save(Duel::begin(
-            uniqid('', true),
+            $event->duelId(),
             $challengingPlayer->username(),
             $challengedPlayer->username()
         ));

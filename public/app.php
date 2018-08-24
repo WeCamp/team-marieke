@@ -17,7 +17,7 @@ require_once __DIR__ . '/../vendor/autoload.php';
 Amp\Loop::run(function () {
     $log = new \Monolog\Logger('app', [new \Monolog\Handler\StreamHandler('php://stderr')]);
 
-    $eventBus = new \CorrectHorseBattery\EventBus\EventBus();
+    $eventBus = new \CorrectHorseBattery\EventBus\EventBus($log);
 
     // Setup the websocket
     $continuousCommunication = new ContinuousCommunication($eventBus);
