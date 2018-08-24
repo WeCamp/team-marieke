@@ -39,6 +39,7 @@
 
         methods: {
             signOn(username) {
+                window.ws.send(JSON.stringify({type: "signOn", username: username}));
                 this.$emit('update:usernameOfSignedOnUser', username);
             }
         },

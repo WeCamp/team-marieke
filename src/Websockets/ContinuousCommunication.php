@@ -14,10 +14,12 @@ class ContinuousCommunication implements Application
 {
     /** @var Endpoint */
     private $endpoint;
+    private $usernamesOfClients = [];
 
     public function onStart(Endpoint $endpoint)
     {
         $this->endpoint = $endpoint;
+        $this->endpoint->broadcast("broadcast alert!!");
     }
 
     public function onHandshake(Request $request, Response $response)
@@ -27,12 +29,25 @@ class ContinuousCommunication implements Application
 
     public function onOpen(int $clientId, Request $request)
     {
-        // do nothing
+        $this->endpoint->broadcast("onOpen test");
     }
 
     public function onData(int $clientId, Message $message)
     {
-        // do nothing
+        $contents = json_decode(yield $message->read(), true);
+
+        if(is_array($contents) && array_key_exists('type', $contents)) {
+            switch ($contents['type']) {
+                case "signOn":
+                    $this->usernamesOfClients[$clientId] = $contents['username'];
+                    break;
+                case "challenged":
+                    $username = $this->usernameFromClientId($clientId);
+                    break;
+                case "acceptedChallenge":
+                    break;
+            }
+        }
     }
 
     public function onClose(int $clientId, int $code, string $reason)
@@ -42,6 +57,11 @@ class ContinuousCommunication implements Application
 
     public function onStop()
     {
-        Loop::cancel($this->watcher);
+        // do nothing
+    }
+
+    private function usernameFromClientId(int $clientId)
+    {
+        return $this->usernamesOfClients[$clientId];
     }
 }
