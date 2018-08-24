@@ -1,21 +1,25 @@
 <template>
     <div id="app">
-        <challenge-notification
-            :challengingPlayer="challengingPlayer"
-            :challengedPlayer="usernameOfSignedOnUser">
-        </challenge-notification>
+        <div v-if="!duelling">
+            <challenge-notification
+                :challengingPlayer.sync="challengingPlayer"
+                :challengedPlayer="usernameOfSignedOnUser"
+                @startDuel="() => this.duelling = true">
+            </challenge-notification>
 
-        <div v-if="usernameOfSignedOnUser !== null">
-            <p>Currently signed on as <b>{{ usernameOfSignedOnUser }}</b></p>
-            <players-to-challenge :username-of-signed-on-user="usernameOfSignedOnUser"></players-to-challenge>
-        </div>
-        <div v-else>
-            <sign-on :username-of-signed-on-user.sync="usernameOfSignedOnUser"></sign-on>
+            <div v-if="usernameOfSignedOnUser !== null">
+                <p>Currently signed on as <b>{{ usernameOfSignedOnUser }}</b></p>
+                <players-to-challenge
+                    :username-of-signed-on-user="usernameOfSignedOnUser"
+                    @startDuel="() => this.duelling = true">
+                </players-to-challenge>
+            </div>
+            <div v-else>
+                <sign-on :username-of-signed-on-user.sync="usernameOfSignedOnUser"></sign-on>
+            </div>
         </div>
 
-        <duel
-            :player="usernameOfSignedOnUser">
-        </duel>
+        <duel v-if="duelling" :player="usernameOfSignedOnUser"></duel>
     </div>
 </template>
 
@@ -50,6 +54,7 @@
             return {
                 usernameOfSignedOnUser: null,
                 challengingPlayer: null,
+                duelling: false,
             };
         },
         mounted() {

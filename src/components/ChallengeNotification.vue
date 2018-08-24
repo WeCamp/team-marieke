@@ -19,6 +19,12 @@ export default {
                 challengingPlayer: this.challengingPlayer,
                 accept: acceptance,
             }));
+            if (acceptance) {
+                this.$emit('startDuel');
+            }
+            else {
+                this.$emit('update:challengingPlayer', null);
+            }
         }
     },
 };
