@@ -11,6 +11,20 @@
 export default {
     props: ['challengingPlayer', 'challengedPlayer'],
 
+    mounted() {
+        window.ws.addEventListener('message', event => {
+            const data = JSON.parse(event.data);
+            if (data.type === 'challenge_accepted') {
+                const { accept, duel_id } = data;
+                if (accept) {
+                     this.$emit('startDuel', { duel_id });
+                } else {
+                    this.$emit('update:challengingPlayer', null);
+                }
+            }
+        });
+    },
+
     methods: {
         reply(acceptance) {
             window.ws.send(JSON.stringify({
@@ -19,12 +33,6 @@ export default {
                 challengingPlayer: this.challengingPlayer,
                 accept: acceptance,
             }));
-            if (acceptance) {
-                this.$emit('startDuel');
-            }
-            else {
-                this.$emit('update:challengingPlayer', null);
-            }
         }
     },
 };
