@@ -9,6 +9,7 @@ use CorrectHorseBattery\Authentication\AuthenticationContext;
 use CorrectHorseBattery\Authentication\NoPlayerSignedOn;
 use CorrectHorseBattery\Domain\PlayerDoesNotExist;
 use CorrectHorseBattery\Repositories\Players;
+use CorrectHorseBattery\Websockets\ContinuousCommunication;
 
 class Router
 {
@@ -16,7 +17,7 @@ class Router
 
     private $authenticationContextFactory;
 
-    public function __construct()
+    public function __construct(ContinuousCommunication $continuousCommunication)
     {
         $players = function (): Players {
             static $instance = null;
@@ -40,8 +41,8 @@ class Router
             '/playerstochallenge' => function () {
                 return new \CorrectHorseBattery\Controllers\ChallengeablePlayers();
             },
-            '/challengeplayer' => function () use ($players) {
-                return new \CorrectHorseBattery\Controllers\ChallengePlayer($players());
+            '/challengeplayer' => function () use ($continuousCommunication, $players) {
+                return new \CorrectHorseBattery\Controllers\ChallengePlayer($players(), $continuousCommunication);
             },
         ];
     }

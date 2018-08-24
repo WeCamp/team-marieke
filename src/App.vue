@@ -1,5 +1,9 @@
 <template>
     <div id="app">
+        <div v-if="challengingPlayer !== null" class="alert alert-waiting">
+            You have been challenged to a duel by <strong>{{challengingPlayer}}</strong>!
+        </div>
+
         <div v-if="usernameOfSignedOnUser !== null">
             <p>Currently signed on as <b>{{ usernameOfSignedOnUser }}</b></p>
             <players-to-challenge :username-of-signed-on-user="usernameOfSignedOnUser"></players-to-challenge>
@@ -22,7 +26,14 @@
         data() {
             return {
                 usernameOfSignedOnUser: null,
+                challengingPlayer: null,
             };
+        },
+        mounted() {
+            window.ws.addEventListener("message", (e) => {
+                const data = JSON.parse(e.data);
+                this.challengingPlayer = data.challenging_player;
+            });
         },
     };
 </script>

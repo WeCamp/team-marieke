@@ -80,23 +80,3 @@
         },
     };
 </script>
-
-<style scoped>
-.alert {
-    padding: 1em;
-    border: 1px solid black;
-    border-radius: 1em;
-}
-
-.alert-waiting {
-    background-color: #fc6;
-}
-
-.alert-accepted {
-    background-color: #cf6;
-}
-
-.alert-rejected {
-    background-color: #f99;
-}
-</style>
