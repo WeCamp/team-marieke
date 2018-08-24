@@ -11,6 +11,10 @@
         <div v-else>
             <sign-on :username-of-signed-on-user.sync="usernameOfSignedOnUser"></sign-on>
         </div>
+
+        <duel
+            :player="usernameOfSignedOnUser">
+        </duel>
     </div>
 </template>
 
@@ -18,6 +22,7 @@
     import axios from 'axios';
     import SignOn from './components/SignOn.vue';
     import PlayersToChallenge from './components/PlayersToChallenge';
+    import Duel from './components/Duel';
 
     export default {
         watch: {
@@ -36,6 +41,7 @@
         components: {
             SignOn,
             PlayersToChallenge,
+            Duel,
         },
         data() {
             return {
