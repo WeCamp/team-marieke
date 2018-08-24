@@ -7,7 +7,9 @@ use Amp\Http\Server\Response;
 use Amp\Http\Status;
 use CorrectHorseBattery\Authentication\AuthenticationContext;
 use CorrectHorseBattery\Authentication\NoPlayerSignedOn;
+use CorrectHorseBattery\Domain\Duels;
 use CorrectHorseBattery\Domain\PlayerDoesNotExist;
+use CorrectHorseBattery\EventBus\EventBus;
 use CorrectHorseBattery\Repositories\Players;
 use CorrectHorseBattery\Websockets\ContinuousCommunication;
 
@@ -17,7 +19,7 @@ class Router
 
     private $authenticationContextFactory;
 
-    public function __construct(ContinuousCommunication $continuousCommunication)
+    public function __construct(ContinuousCommunication $continuousCommunication, EventBus $eventBus)
     {
         $players = function (): Players {
             static $instance = null;
@@ -30,6 +32,13 @@ class Router
             static $instance = null;
             if ($instance === null) {
                 $instance = new AuthenticationContext($players());
+            }
+            return $instance;
+        };
+        $duels = function (): Duels {
+            static $instance = null;
+            if ($instance === null) {
+                $instance = new Duels();
             }
             return $instance;
         };
@@ -48,6 +57,11 @@ class Router
                 return new \CorrectHorseBattery\Controllers\ChallengeOfPlayer();
             },
         ];
+
+        $eventBus->subscribe(
+            \CorrectHorseBattery\Events\ChallengeToDuelAccepted::class,
+            new \CorrectHorseBattery\EventSubscribers\BeginDuelWhenChallengeToDuelAccepted($players(), $duels())
+        );
     }
 
     public function route(Request $request)
